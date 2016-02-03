@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:55:54 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/02 18:56:44 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/03 15:20:08 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../../libft/libft.h"
 # include <stdlib.h>
+# include <fcntl.h>
 
 # define BUFF_SIZE  20
 
