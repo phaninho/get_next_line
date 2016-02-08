@@ -45,13 +45,12 @@ int			get_next_line(int const fd, char **line)
 		return (-1);
 	if (str)
 	{
-		printf("---str : %s\n", str);
 		*line = join_next_line(str, line, chr);
 		if ((chr = ft_strchr(str, '\n')))
 		{
 			if ((chr + 1))
 				str = ft_strdup(chr + 1);
-			if (buff)
+		//	if (buff)
 				/*free(buff);*/
 			return (0);
 		}
@@ -63,7 +62,6 @@ int			get_next_line(int const fd, char **line)
 			return (-1);
 		if ((chr = ft_strchr(buff, '\n')))
 		{
-			printf("++++++buff : %s\n++++str : %s\n+++++line : %s\n", buff, str, *line);
 			tmp = *line;
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
@@ -96,7 +94,7 @@ int		main(int ac, char **av)
 		return (-1);
 	while (i++ < 15)
 	{
-		(get_next_line(fd, &line) == -1) ? ft_putstr("error\n") : printf("--final line : %s\n", line);
+		(get_next_line(fd, &line) == -1) ? ft_putstr("error\n") : printf("-##- : %s\n", line);
 	}
 	if (line)
 		free(line);
