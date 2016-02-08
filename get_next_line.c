@@ -6,10 +6,10 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:52:25 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/05 22:36:38 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/08 15:30:39 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "gnlinc.h"
+#include "get_next_line.h"
 #include <stdio.h>
 
 char		*join_next_line(char *str, char **line, char *chr)
@@ -45,13 +45,14 @@ int			get_next_line(int const fd, char **line)
 		return (-1);
 	if (str)
 	{
+		printf("---str : %s\n", str);
 		*line = join_next_line(str, line, chr);
 		if ((chr = ft_strchr(str, '\n')))
 		{
 			if ((chr + 1))
 				str = ft_strdup(chr + 1);
 			if (buff)
-				free(buff);
+				/*free(buff);*/
 			return (0);
 		}
 	}
@@ -62,20 +63,22 @@ int			get_next_line(int const fd, char **line)
 			return (-1);
 		if ((chr = ft_strchr(buff, '\n')))
 		{
+			printf("++++++buff : %s\n++++str : %s\n+++++line : %s\n", buff, str, *line);
 			tmp = *line;
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
 			str = ft_strdup(chr + 1);
-			if (tmp)
-				free(tmp);
-			if (buff)
-				free(buff);
+			/*if (tmp)*/
+				/*free(tmp);*/
+			/*if (buff)*/
+				/*free(buff);*/
 			return (0);
 		}
 		else
 		{
 			tmp = *line;
 			*line = ft_strjoin(*line, buff);
+			//str = ft_strdup(*line);
 			if (tmp)
 				free(tmp);
 		}
