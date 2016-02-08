@@ -17,7 +17,6 @@ char		*join_next_line(char *str, char **line, char *chr)
 	char	*tmp;
 
 	tmp = NULL;
-	chr = NULL;
 	if ((chr = ft_strchr(str, '\n')) && str)
 	{
 		tmp = *line;
@@ -49,33 +48,38 @@ int			get_next_line(int const fd, char **line)
 		*line = join_next_line(str, line, chr);
 		if ((chr = ft_strchr(str, '\n')))
 		{
-			str = ft_strdup(chr + 1);
+			if ((chr + 1))
+				str = ft_strdup(chr + 1);
+			if (buff)
+				free(buff);
 			return (0);
 		}
 	}
-		while ((oct = read(fd, buff, BUFF_SIZE)))
+	while ((oct = read(fd, buff, BUFF_SIZE)))
+	{
+		buff[oct] = '\0';
+		if (oct == -1)
+			return (-1);
+		if ((chr = ft_strchr(buff, '\n')))
 		{
-			buff[oct] = '\0';
-			if (oct == -1)
-				return (-1);
-			if ((chr = ft_strchr(buff, '\n')))
-			{
-				tmp = *line;
-				*line = ft_strjoin(*line, ft_strsub(buff, 0,
-				(size_t)(chr - buff)));
-				str = ft_strdup(chr + 1);
-				if (tmp)
-					free(tmp);
-				return (0);
-			}
-			else
-			{
-				tmp = *line;
-				*line = ft_strjoin(*line, buff);
-			}
+			tmp = *line;
+			*line = ft_strjoin(*line, ft_strsub(buff, 0,
+			(size_t)(chr - buff)));
+			str = ft_strdup(chr + 1);
+			if (tmp)
+				free(tmp);
+			if (buff)
+				free(buff);
+			return (0);
+		}
+		else
+		{
+			tmp = *line;
+			*line = ft_strjoin(*line, buff);
 			if (tmp)
 				free(tmp);
 		}
+	}
 	return (0);
 }
 
@@ -87,12 +91,12 @@ int		main(int ac, char **av)
 
 	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
 		return (-1);
-	while (i++ < 8)
+	while (i++ < 15)
 	{
 		(get_next_line(fd, &line) == -1) ? ft_putstr("error\n") : printf("--final line : %s\n", line);
 	}
 	if (line)
-	free(line);
+		free(line);
 	return (0);
 }
 //ft_strjoin
