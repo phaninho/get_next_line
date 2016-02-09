@@ -50,8 +50,8 @@ int			get_next_line(int const fd, char **line)
 		{
 			if ((chr + 1))
 				str = ft_strdup(chr + 1);
-		//	if (buff)
-				/*free(buff);*/
+		if (buff)
+				free(buff);
 			return (0);
 		}
 	}
@@ -66,17 +66,16 @@ int			get_next_line(int const fd, char **line)
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
 			str = ft_strdup(chr + 1);
-			/*if (tmp)*/
-				/*free(tmp);*/
-			/*if (buff)*/
-				/*free(buff);*/
+			if (tmp)
+				free(tmp);
+			if (buff)
+				free(buff);
 			return (0);
 		}
 		else
 		{
 			tmp = *line;
 			*line = ft_strjoin(*line, buff);
-			//str = ft_strdup(*line);
 			if (tmp)
 				free(tmp);
 		}
