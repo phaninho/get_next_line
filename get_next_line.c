@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:52:25 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/08 15:30:39 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/09 14:25:16 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -22,9 +22,9 @@ char		*join_next_line(char *str, char **line, char *chr)
 		tmp = *line;
 		*line = ft_strjoin(*line, ft_strsub(str, 0, (size_t)(chr - str)));
 		if (str)
-			free(str);
+			ft_strdel(&str);
 		if (tmp)
-			free(tmp);
+			ft_strdel(&tmp);
 	}
 	else
 		if (str)
@@ -45,21 +45,24 @@ int			get_next_line(int const fd, char **line)
 	tmp = NULL;
 	if (!(buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
+//	printf("@@@@@@@@@@@str : %s\n", str);
 	if (str)
 	{
 		*line = join_next_line(str, line, chr);
+//		printf("IIIIIIIIIIIline : %s\n", *line);
 		if ((chr = ft_strchr(str, '\n')))
 		{
 			if ((chr + 1))
 				str = ft_strdup(chr + 1);
 		if (buff)
-				free(buff);
+				ft_strdel(&buff);
 			return (0);
 		}
 //			printf("=========str = %s\n@@@@@@@@line : %s\n", str, *line);
 	}
 	while ((oct = read(fd, buff, BUFF_SIZE)))
 	{
+//	printf("bing1 buff : %s\nline %s\nstr : %s\n", buff, *line, str);
 		buff[oct] = '\0';
 		if (oct == -1)
 			return (-1);
@@ -80,17 +83,19 @@ int			get_next_line(int const fd, char **line)
 			str = ft_strdup(chr + 1);
 //			printf("__________str : %s\n", str);
 			if (tmp)
-				free(tmp);
+				ft_strdel(&tmp);
 			if (buff)
-				free(buff);
+				ft_strdel(&buff);
 			return (0);
 		}
 		else
 		{
 			tmp = *line;
+//	printf("bbbbbbbbbuff : %s\n #######line : %s\n", buff, *line);
 			*line = ft_strjoin(*line, buff);
+//	printf("lllllllllllline : %s\nttttttttttmp : %s\n", *line, tmp);
 			if (tmp)
-				free(tmp);
+				ft_strdel(&tmp);
 		}
 	}
 	return (0);
