@@ -21,6 +21,8 @@ char		*join_next_line(char *str, char **line, char *chr)
 	{
 		tmp = *line;
 		*line = ft_strjoin(*line, ft_strsub(str, 0, (size_t)(chr - str)));
+		if (str)
+			free(str);
 		if (tmp)
 			free(tmp);
 	}
@@ -54,18 +56,29 @@ int			get_next_line(int const fd, char **line)
 				free(buff);
 			return (0);
 		}
+			printf("=========str = %s\n@@@@@@@@line : %s\n", str, *line);
 	}
 	while ((oct = read(fd, buff, BUFF_SIZE)))
 	{
 		buff[oct] = '\0';
 		if (oct == -1)
 			return (-1);
+		if (buff[0] == '\n')
+		{
+			printf("èèèèèèèèèèline : %s\n àààààààààààstr : %s\n", *line, str);
+			str = ft_strdup(buff + 1);
+			printf("ssssssssssssssstr : %s\n", str);
+			if (buff)
+				free(buff);
+			return (0);
+		}
 		if ((chr = ft_strchr(buff, '\n')))
 		{
 			tmp = *line;
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
 			str = ft_strdup(chr + 1);
+			printf("__________str : %s\n", str);
 			if (tmp)
 				free(tmp);
 			if (buff)
