@@ -56,7 +56,7 @@ int			get_next_line(int const fd, char **line)
 				free(buff);
 			return (0);
 		}
-			printf("=========str = %s\n@@@@@@@@line : %s\n", str, *line);
+//			printf("=========str = %s\n@@@@@@@@line : %s\n", str, *line);
 	}
 	while ((oct = read(fd, buff, BUFF_SIZE)))
 	{
@@ -65,9 +65,9 @@ int			get_next_line(int const fd, char **line)
 			return (-1);
 		if (buff[0] == '\n')
 		{
-			printf("èèèèèèèèèèline : %s\n àààààààààààstr : %s\n", *line, str);
+//			printf("èèèèèèèèèèline : %s\n àààààààààààstr : %s\n", *line, str);
 			str = ft_strdup(buff + 1);
-			printf("ssssssssssssssstr : %s\n", str);
+//			printf("ssssssssssssssstr : %s\n", str);
 			if (buff)
 				free(buff);
 			return (0);
@@ -78,7 +78,7 @@ int			get_next_line(int const fd, char **line)
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
 			str = ft_strdup(chr + 1);
-			printf("__________str : %s\n", str);
+//			printf("__________str : %s\n", str);
 			if (tmp)
 				free(tmp);
 			if (buff)
