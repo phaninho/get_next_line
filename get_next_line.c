@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:52:25 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/09 14:25:16 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/11 16:11:59 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -39,65 +39,85 @@ int			get_next_line(int const fd, char **line)
 	char			*tmp;
 	int				oct;
 	char			*chr;
-
+	int				out = 0;
 	*line = NULL;
 	chr = NULL;
 	tmp = NULL;
 	if (!(buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
-//	printf("@@@@@@@@@@@str : %s\n", str);
 	if (str)
 	{
 		*line = join_next_line(str, line, chr);
-//		printf("IIIIIIIIIIIline : %s\n", *line);
 		if ((chr = ft_strchr(str, '\n')))
 		{
 			if ((chr + 1))
 				str = ft_strdup(chr + 1);
-		if (buff)
+			if (buff)
 				ft_strdel(&buff);
-			return (0);
+		printf("return 1-0\n");
+			return(1);
 		}
-//			printf("=========str = %s\n@@@@@@@@line : %s\n", str, *line);
 	}
 	while ((oct = read(fd, buff, BUFF_SIZE)))
 	{
-//	printf("bing1 buff : %s\nline %s\nstr : %s\n", buff, *line, str);
+		if (oct < BUFF_SIZE)
+			out++;
+		printf("oct: %d\n", oct);
 		buff[oct] = '\0';
 		if (oct == -1)
 			return (-1);
-		if (buff[0] == '\n')
+		if (buff[0] == '\n' && oct)
 		{
-//			printf("èèèèèèèèèèline : %s\n àààààààààààstr : %s\n", *line, str);
 			str = ft_strdup(buff + 1);
-//			printf("ssssssssssssssstr : %s\n", str);
 			if (buff)
-				free(buff);
-			return (0);
+				ft_strdel(&buff);
+			if (out && !str)
+			{
+				printf("return 0-mid str: %s\n", str);
+				return (0);
+			}
+			if (str)
+			{
+				printf("return 1-mid str: %s\n", str);
+				return (1);
+			}
 		}
-		if ((chr = ft_strchr(buff, '\n')))
+		if ((chr = ft_strchr(buff, '\n')) && oct)
 		{
 			tmp = *line;
 			*line = ft_strjoin(*line, ft_strsub(buff, 0,
 			(size_t)(chr - buff)));
 			str = ft_strdup(chr + 1);
-//			printf("__________str : %s\n", str);
 			if (tmp)
 				ft_strdel(&tmp);
 			if (buff)
 				ft_strdel(&buff);
-			return (0);
+			if (out && !str)
+			{
+			printf("return 0-end str: %s\n", str);
+				return (0);
+			
+			}
+				if (str)
+				{
+			printf("return 1-end str: %s\n", str);
+					return (1);
+				}
 		}
 		else
 		{
 			tmp = *line;
-//	printf("bbbbbbbbbuff : %s\n #######line : %s\n", buff, *line);
 			*line = ft_strjoin(*line, buff);
-//	printf("lllllllllllline : %s\nttttttttttmp : %s\n", *line, tmp);
 			if (tmp)
 				ft_strdel(&tmp);
 		}
+		if (!oct && !str)
+		{
+			printf("return 0 final\n");
+			return(0);
+		}
 	}
+	printf("return 0-1\n");
 	return (0);
 }
 
@@ -114,10 +134,6 @@ int		main(int ac, char **av)
 		(get_next_line(fd, &line) == -1) ? ft_putstr("error\n") : printf("-##- : %s\n", line);
 	}
 	if (line)
-		free(line);
+		ft_strdel(&line);
 	return (0);
 }
-//ft_strjoin
-//ft_strsub
-//ft_strdup
-//ft_strchr
