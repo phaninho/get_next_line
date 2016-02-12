@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:55:54 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/11 16:10:35 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/12 15:43:10 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,16 @@
 
 # define BUFF_SIZE 1
 
+typedef struct				s_line
+{
+	int			oct;
+	static char	*str;
+	char		*tmp;
+	char		*chr;
+	char		*buff;
+	int			ret;
+}							t_line;
+
 int				get_next_line(int fd, char **line);
+
 #endif
