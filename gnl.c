@@ -17,37 +17,43 @@ void		find_bsn(t_line *in, char **line)
 {
 	in->ret = 0;
 	in->chr = NULL;
-	in->chr = ft_strchr(in->buff, '\n');
-	if (((size_t)(in->chr)) - ((size_t)(in->buff)))
+	if (in->buff[0] == '\n' && in->str)
+		{
+			in->tmp = *line;
+			*line = ft_strjoin(*line, in->str);
+			if (in->tmp)
+				ft_strdel(&in->tmp);
+			ft_strdel(&in->str);
+			in->str = ft_strdup(in->buff + 1);
+			in->ret = 1;
+		}
+	if (!in->ret && (in->chr = ft_strchr(in->buff, '\n')))
 	{
 		in->tmp = *line;
-		*line = ft_strjoin(*line, ft_strsub(in->buff, 0,
-					(size_t)(in->chr - in->buff)));
+		*line = ft_strjoin(*line, ft_strsub(in->buff, 0, (in->buff[0] == '\n')
+		? 0 : (size_t)(in->chr - in->buff)));
 		ft_strdel(&in->tmp);
-		if ((in->chr + 1))
-		{
-			if (in->str)
-				ft_strdel(&in->str);
-			in->str = ft_strdup(in->chr + 1);
-		}
-			else
-			in->ret = 1;
+		if (in->str)
+			ft_strdel(&in->str);
+		in->str = ft_strdup(in->chr + 1);
+		in->ret = 1;
 	}
 }
 
 int			check_str(t_line in, char *line)
 {
 	in.chr = NULL;
+	printf("entre\n");
 	if ((in.chr = ft_strchr(in.str, '\n')))
 	{
+		printf("regarde\n");
 		in.tmp = line;
 		line = ft_strjoin(line, ft_strsub(in.str, 0, (size_t)(in.chr - in.str)));
 		if (in.tmp)
 			ft_strdel(&in.tmp);
-		if (in.chr + 1)
+		if (line)
 		{
-			if (in.str)
-				ft_strdel(&in.str);
+		printf("whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 			if (in.buff)
 				ft_strdel(&in.buff);
 			in.str = ft_strdup(in.chr + 1);
@@ -55,44 +61,46 @@ int			check_str(t_line in, char *line)
 		printf("pouk\n");
 		return (1);
 	}
-	printf("poukpouko\n");
 	return (0);
 }
 
 int			get_next_line(int const fd, char **line)
 {
 	static t_line			in;
-
-	if ((check_str(in, *line) == 1))
+	printf("stattttiiiiiiiiiiiiic%s\n", in.str);
+	in.ret = 0;
+	if (in.str[0] == '\n')
+	{
+		*line = ft_strjoin(*line, in.str);
+		in.str = ft_strdup(in.str + 1);
 		return (1);
+	}
+	if (in.str && (check_str(in, *line) == 1))
+		return (1);
+	if (*line)
+		ft_strdel(line);
 	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
-		printf("oct = %d buff : %s\n", in.oct, in.buff);
 		if (in.oct == -1)
 			return (-1);
 		in.buff[in.oct] = '\0';
 		if (!(ft_strchr(in.buff, '\n')))
 		{
-			in.tmp = in.str;
-			in.str = ft_strjoin(in.str, in.buff);
-			ft_strdel(&in.buff);
+			in.tmp = *line;
+			*line = ft_strjoin(*line, in.buff);
 			if (in.tmp)
 				ft_strdel(&in.tmp);
-			printf("le str :%s\n", in.str);
 		}
 		else
-		{
-			printf("bim\n");
 			find_bsn(&in, line);
-		}
-		if (in.buff)
-			ft_strdel(&in.buff);
 		if (in.ret == 1)
 			return (1);
 	}
-	if (!(in.oct) && !in.str)
+	if (in.buff)
+		ft_strdel(&in.buff);
+	if (!(in.oct && in.str))
 		return (0);
 	return (1);
 }
@@ -111,3 +119,4 @@ int		main(int ac, char **av)
 	}
 	return (0);
 }
+
