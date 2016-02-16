@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/16 16:58:33 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/16 17:37:33 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void		find_bsn(t_line *in, char **line)
 
 int			check_str(t_line in, char *line)
 {
+	char	*tmp;
+
+	tmp = NULL;
 	in.chr = NULL;
 	printf("entre str: %s\n", in.str);
 	if ((in.chr = ft_strchr(in.str, '\n')))
@@ -55,8 +58,10 @@ int			check_str(t_line in, char *line)
 		== 0 ? 1 : (size_t)(in.chr - in.str))));
 		if (in.tmp)
 			ft_strdel(&in.tmp);
+		tmp = in.str;
 		if ((in.chr + 1))
 			in.str = ft_strdup(in.chr + 1);
+		ft_strdel(&tmp);
 		printf("pouk str: %s\n", in.str);
 		return (1);
 	}
@@ -66,10 +71,9 @@ int			check_str(t_line in, char *line)
 int			get_next_line(int const fd, char **line)
 {
 	static t_line			in;
-	printf("stattttiiiiiiiiiiiiic%s\n", in.str);
 	in.ret = 0;
-	if (*line)
-		ft_strdel(line); // met line a NULL dans le retour
+//	if (*line)
+//		ft_strdel(line); // met line a NULL dans le retour
 	if (in.str && (check_str(in, *line) == 1))
 		return (1);
 	if (*line)
