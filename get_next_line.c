@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/19 12:37:14 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/19 15:35:56 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void		find_bsn(t_line *in, char **line)
 	in->ret = 1;
 }
 
+#include <stdio.h>
 int			check_str(t_line *in, char **line)
 {
 	char	*tmp;
@@ -85,10 +86,11 @@ int			get_next_line(int const fd, char **line)
 	free_mem(line);
 	if (in.str && (check_str(&in, line) == 1))
 		return (1);
-		if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
+		printf("in str: [%s]\n", in.str);
 		if (in.oct == -1)
 			return (-1);
 		in.buff[in.oct] = '\0';
@@ -99,24 +101,13 @@ int			get_next_line(int const fd, char **line)
 		if (in.ret == 1)
 			return (1);
 	}
+	printf("out str: [%s]\n", in.str);
 	free_mem(&in.buff);
+	if (in.oct == 0 && in.str && *line == NULL)
+	{
+		*line = ft_strjoin(*line, ft_strsub(in.str, 0, (size_t)(ft_strchr(in.str, '\0') - in.str)));
+		free_mem(&in.str);
+		return (1);
+	}
 	return (in.oct == 0 ? 0 : 1);
 }
-/*
-#include <stdio.h>
-int			main(int ac, char **av)
-{
-	int		i;
-	int		fd;
-	char	*line;
-
-	i = 0;
-	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
-		return (-1);
-	while (i++ < 23)
-	{
-		(get_next_line(fd, &line) == -1) ?
-			ft_putstr("error\n") : printf("%s\n", line);
-	}
-	return (0);
-}*/
