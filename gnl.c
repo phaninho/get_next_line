@@ -6,12 +6,18 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/16 17:37:33 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/19 10:30:55 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+
+void		free_mem(char **str)
+{
+	if (*str)
+		ft_strdel(str);
+}
 
 void		find_bsn(t_line *in, char **line)
 {
@@ -24,7 +30,7 @@ void		find_bsn(t_line *in, char **line)
 			in->tmp = *line;
 			*line = ft_strjoin(in->str, ft_strsub
 			(in->buff, 0, (size_t)(in->chr - in->buff)));
-			ft_strdel(&in->str);
+			free_mem(&in->str);
 			if (in->chr + 1)
 				in->str = ft_strdup(in->chr + 1);
 		}
@@ -33,8 +39,7 @@ void		find_bsn(t_line *in, char **line)
 			in->tmp = *line;
 			*line = ft_strjoin(*line, ft_strsub
 			(in->buff, 0, (size_t)(in->chr - in->buff)));
-			if (in->tmp)
-				ft_strdel(&in->tmp);
+				free_mem(&in->tmp);
 			if (in->chr + 1)
 				in->str = ft_strdup(in->chr + 1);
 		}
@@ -52,12 +57,11 @@ int			check_str(t_line in, char *line)
 	{
 		in.tmp = line;
 		line = ft_strjoin(line, ft_strsub(in.str, 0, (size_t)(in.chr - in.str)));
-		if (in.tmp)
-			ft_strdel(&in.tmp);
+			free_mem(&in.tmp);
 		tmp = in.str;
 		if ((in.chr + 1))
 			in.str = ft_strdup(in.chr + 1);
-		ft_strdel(&tmp);
+		free_mem(&tmp);
 		return (1);
 	}
 	return (0);
@@ -69,39 +73,33 @@ int			get_next_line(int const fd, char **line)
 	in.ret = 0;
 	if (in.str && (check_str(in, *line) == 1))
 		return (1);
-	if (*line)
-		ft_strdel(line);
+		free_mem(line);
 	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
 		if (in.oct == -1)
 			return (-1);
-		if (in.oct == 0)
-			break;
 		in.buff[in.oct] = '\0';
 		if (!(ft_strchr(in.buff, '\n')))
 		{
 			if (in.str)
 			{
-				*line = ft_strjoin(in.str, in.buff);
-				ft_strdel(&in.str);
-			}
-			else
-			{
 				in.tmp = *line;
-				*line = ft_strjoin(*line, in.buff);
-				if (in.tmp)
-					ft_strdel(&in.tmp);
+				*line = ft_strjoin(*line, in.str);
+				free_mem(&in.str);
 			}
+			in.tmp = *line;
+			*line = ft_strjoin(*line, in.buff);
+			free_mem(&in.tmp);
+			
 		}
 		else
 			find_bsn(&in, line);
 		if (in.ret == 1)
 			return (1);
 	}
-	if (in.buff)
-		ft_strdel(&in.buff);
+		free_mem(&in.buff);
 	if (!(in.oct && in.str))
 		return (0);
 	return (1);
@@ -121,4 +119,3 @@ int		main(int ac, char **av)
 	}
 	return (0);
 }
-
