@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/19 10:30:55 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/19 10:45:22 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,21 @@ void		find_bsn(t_line *in, char **line)
 	in->chr = NULL;
 	if (!in->ret && (in->chr = ft_strchr(in->buff, '\n')))
 	{
+	//	printf("str: [%s] buff: [%s] line: [%s]\n", in->str, in->buff, *line);
 		if (in->str)
 		{
+	//		printf("enter\n");
 			in->tmp = *line;
-			*line = ft_strjoin(in->str, ft_strsub
-			(in->buff, 0, (size_t)(in->chr - in->buff)));
+			*line = ft_strjoin(*line, in->str);
+			free_mem(&in->tmp);
 			free_mem(&in->str);
-			if (in->chr + 1)
-				in->str = ft_strdup(in->chr + 1);
 		}
-		else
-		{
-			in->tmp = *line;
-			*line = ft_strjoin(*line, ft_strsub
-			(in->buff, 0, (size_t)(in->chr - in->buff)));
-				free_mem(&in->tmp);
-			if (in->chr + 1)
-				in->str = ft_strdup(in->chr + 1);
-		}
+		in->tmp = *line;
+		*line = ft_strjoin(*line, ft_strsub
+		(in->buff, 0, (size_t)(in->chr - in->buff)));
+			free_mem(&in->tmp);
+		if (in->chr + 1)
+			in->str = ft_strdup(in->chr + 1);
 	}
 	in->ret = 1;
 }
@@ -67,6 +64,20 @@ int			check_str(t_line in, char *line)
 	return (0);
 }
 
+char		*fill_line(char **line, t_line *in)
+{
+	if (in->str)
+	{
+		in->tmp = *line;
+		*line = ft_strjoin(*line, in->str);
+		free_mem(&in->str);
+	}
+	in->tmp = *line;
+	*line = ft_strjoin(*line, in->buff);
+	free_mem(&in->tmp);
+	return (*line);
+}
+
 int			get_next_line(int const fd, char **line)
 {
 	static t_line			in;
@@ -82,18 +93,7 @@ int			get_next_line(int const fd, char **line)
 			return (-1);
 		in.buff[in.oct] = '\0';
 		if (!(ft_strchr(in.buff, '\n')))
-		{
-			if (in.str)
-			{
-				in.tmp = *line;
-				*line = ft_strjoin(*line, in.str);
-				free_mem(&in.str);
-			}
-			in.tmp = *line;
-			*line = ft_strjoin(*line, in.buff);
-			free_mem(&in.tmp);
-			
-		}
+			*line = fill_line(line, &in);
 		else
 			find_bsn(&in, line);
 		if (in.ret == 1)
