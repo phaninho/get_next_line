@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/19 11:51:03 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/19 12:37:14 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ char		*fill_line(char **line, t_line *in)
 	{
 		in->tmp = *line;
 		*line = ft_strjoin(*line, in->str);
+		free_mem(&in->tmp);
 		free_mem(&in->str);
 	}
 	in->tmp = *line;
@@ -84,7 +85,7 @@ int			get_next_line(int const fd, char **line)
 	free_mem(line);
 	if (in.str && (check_str(&in, line) == 1))
 		return (1);
-	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+		if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
@@ -99,12 +100,11 @@ int			get_next_line(int const fd, char **line)
 			return (1);
 	}
 	free_mem(&in.buff);
-	if (!(in.oct && in.str))
-		return (0);
-	return (1);
+	return (in.oct == 0 ? 0 : 1);
 }
-
-/*int			main(int ac, char **av)
+/*
+#include <stdio.h>
+int			main(int ac, char **av)
 {
 	int		i;
 	int		fd;
@@ -113,7 +113,7 @@ int			get_next_line(int const fd, char **line)
 	i = 0;
 	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
 		return (-1);
-	while (i++ < 20)
+	while (i++ < 23)
 	{
 		(get_next_line(fd, &line) == -1) ?
 			ft_putstr("error\n") : printf("%s\n", line);
