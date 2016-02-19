@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/19 10:45:22 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/19 10:54:50 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ void		find_bsn(t_line *in, char **line)
 	in->chr = NULL;
 	if (!in->ret && (in->chr = ft_strchr(in->buff, '\n')))
 	{
-	//	printf("str: [%s] buff: [%s] line: [%s]\n", in->str, in->buff, *line);
+		printf("str: [%s] buff: [%s] line: [%s]\n", in->str, in->buff, *line);
 		if (in->str)
 		{
-	//		printf("enter\n");
+			printf("enter\n");
 			in->tmp = *line;
 			*line = ft_strjoin(*line, in->str);
 			free_mem(&in->tmp);
 			free_mem(&in->str);
 		}
 		in->tmp = *line;
-		*line = ft_strjoin(*line, ft_strsub
-		(in->buff, 0, (size_t)(in->chr - in->buff)));
-			free_mem(&in->tmp);
+		*line = ft_strjoin(*line, ft_strsub(in->buff, 0,
+		(size_t)(in->chr - in->buff)));
+		free_mem(&in->tmp);
 		if (in->chr + 1)
 			in->str = ft_strdup(in->chr + 1);
 	}
@@ -53,8 +53,9 @@ int			check_str(t_line in, char *line)
 	if ((in.chr = ft_strchr(in.str, '\n')))
 	{
 		in.tmp = line;
-		line = ft_strjoin(line, ft_strsub(in.str, 0, (size_t)(in.chr - in.str)));
-			free_mem(&in.tmp);
+		line = ft_strjoin(line, ft_strsub(in.str, 0,
+		(size_t)(in.chr - in.str)));
+		free_mem(&in.tmp);
 		tmp = in.str;
 		if ((in.chr + 1))
 			in.str = ft_strdup(in.chr + 1);
@@ -81,10 +82,11 @@ char		*fill_line(char **line, t_line *in)
 int			get_next_line(int const fd, char **line)
 {
 	static t_line			in;
+
 	in.ret = 0;
 	if (in.str && (check_str(in, *line) == 1))
 		return (1);
-		free_mem(line);
+	free_mem(line);
 	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
@@ -99,23 +101,25 @@ int			get_next_line(int const fd, char **line)
 		if (in.ret == 1)
 			return (1);
 	}
-		free_mem(&in.buff);
+	free_mem(&in.buff);
 	if (!(in.oct && in.str))
 		return (0);
 	return (1);
 }
 
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
-	int i = 0;
-	int fd;
+	int		i;
+	int		fd;
 	char	*line;
 
+	i = 0;
 	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
 		return (-1);
 	while (i++ < 20)
 	{
-		(get_next_line(fd, &line) == -1) ? ft_putstr("error\n") : printf("%s\n", line);
+		(get_next_line(fd, &line) == -1) ?
+			ft_putstr("error\n") : printf("%s\n", line);
 	}
 	return (0);
 }
