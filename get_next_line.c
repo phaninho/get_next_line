@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/22 02:49:53 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/22 03:13:03 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,11 @@ int			get_next_line(int const fd, char **line)
 		else
 			find_bsn(&in, line);
 		if (in.ret == 1)
+		{
+			free_mem(&in.buff);
 			return (1);
+		}
 	}
-	if (!in.oct && *line)
-		return (0);
 	free_mem(&in.buff);
-		return ((*line == NULL && in.buff == NULL) ? 0 : 1);
+		return (!(in.oct && *line) ? 0 : 1);
 }
