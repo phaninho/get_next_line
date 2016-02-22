@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/19 15:35:56 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/22 02:49:53 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void		find_bsn(t_line *in, char **line)
 	in->ret = 1;
 }
 
-#include <stdio.h>
 int			check_str(t_line *in, char **line)
 {
 	char	*tmp;
@@ -59,6 +58,13 @@ int			check_str(t_line *in, char **line)
 			in->str = ft_strdup(in->chr + 1);
 		free_mem(&tmp);
 		return (1);
+	}
+	else
+	{
+		in->tmp = *line;
+		*line = ft_strjoin(*line, in->str);
+		free_mem(&in->tmp);
+		free_mem(&in->str);
 	}
 	return (0);
 }
@@ -85,12 +91,11 @@ int			get_next_line(int const fd, char **line)
 	in.ret = 0;
 	free_mem(line);
 	if (in.str && (check_str(&in, line) == 1))
-		return (1);
+		in.ret = 1;
 	if (!(in.buff = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
-	while ((in.oct = read(fd, in.buff, BUFF_SIZE)))
+	while (!in.ret && (in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
-		printf("in str: [%s]\n", in.str);
 		if (in.oct == -1)
 			return (-1);
 		in.buff[in.oct] = '\0';
@@ -101,13 +106,8 @@ int			get_next_line(int const fd, char **line)
 		if (in.ret == 1)
 			return (1);
 	}
-	printf("out str: [%s]\n", in.str);
+	if (!in.oct && *line)
+		return (0);
 	free_mem(&in.buff);
-	if (in.oct == 0 && in.str && *line == NULL)
-	{
-		*line = ft_strjoin(*line, ft_strsub(in.str, 0, (size_t)(ft_strchr(in.str, '\0') - in.str)));
-		free_mem(&in.str);
-		return (1);
-	}
-	return (in.oct == 0 ? 0 : 1);
+		return ((*line == NULL && in.buff == NULL) ? 0 : 1);
 }
