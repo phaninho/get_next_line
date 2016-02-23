@@ -3,12 +3,10 @@
 
 int			main(int ac, char **av)
 {
-	int		i;
 	int		fd;
 	char	*line;
 	int		ret;
 
-	i = 0;
 	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
 		return (-1);
 	while ((ret = (get_next_line(fd, &line))) > 0)
