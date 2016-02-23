@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:55:54 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/22 02:51:40 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/23 17:18:33 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
-# define BUFF_SIZE 3000
+# define BUFF_SIZE 3
 
 typedef struct				s_line
 {
@@ -26,7 +26,6 @@ typedef struct				s_line
 	char			*tmp;
 	char			*chr;
 	char			*buff;
-	int				ret;
 }					t_line;
 
 int				get_next_line(int fd, char **line);

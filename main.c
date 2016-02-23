@@ -6,17 +6,17 @@ int			main(int ac, char **av)
 	int		i;
 	int		fd;
 	char	*line;
+	int		ret;
 
 	i = 0;
 	if (ac != 2 || (fd = open(av[1], O_RDONLY)) < 0)
 		return (-1);
-	while ((get_next_line(fd, &line)))
+	while ((ret = (get_next_line(fd, &line))) > 0)
 	{
-		printf("%s\n", line);
+		printf("[%d] : %s\n", ret, line);
 		//(get_next_line(fd, &line) == -1) ?
 		//	ft_putstr("error\n") : printf("%s\n", line);
 	}
-	if (line)
-		printf("%s", line);
+	printf("[%d] : %s\n", ret, line);
 	return (0);
 }
