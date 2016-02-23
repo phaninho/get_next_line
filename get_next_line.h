@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 21:55:54 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/23 17:18:33 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/23 19:04:58 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 typedef struct				s_line
 {
 	int				oct;
-	char			*str;
 	char			*tmp;
 	char			*chr;
 	char			*buff;
