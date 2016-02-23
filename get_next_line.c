@@ -20,9 +20,6 @@ static void		free_mem(char **str)
 
 static void			check_str(t_line *in, char **line, char **str)
 {
-	char	*tmp;
-
-	tmp = NULL;
 	if ((in->chr = ft_strchr(*str, '\n')))
 	{
 		*line = ft_strsub(*str, 0, (size_t)(in->chr - *str));
