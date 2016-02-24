@@ -6,13 +6,13 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/23 19:15:42 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/02/24 16:11:37 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void		free_mem(char **str)
+static void			free_mem(char **str)
 {
 	if (*str)
 		ft_strdel(str);
@@ -63,24 +63,24 @@ static int			read_buffer(char **line, t_line *in, char **str)
 
 int			get_next_line(int const fd, char **line)
 {
-	static char		*str = NULL;
+	static char		*str[256] = {NULL};
 	t_line			in;
 
 	in.chr = NULL;
-	if (!line || fd < 0 || !(in.buff = (char *)malloc(sizeof(char) *
+	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char) *
 	(BUFF_SIZE + 1))))
 		return (-1);
 	*line = NULL;
-	if (str)
-		check_str(&in, line, &str);
+	if (str[fd])
+		check_str(&in, line, &str[fd]);
 	while (!in.chr && (in.oct = read(fd, in.buff, BUFF_SIZE)))
 	{
 		if (in.oct == -1)
 			return (-1);
 		in.buff[in.oct] = '\0';
-		if (read_buffer(line, &in, &str))
+		if (read_buffer(line, &in, &str[fd]))
 			break ;
 	}
 	free_mem(&in.buff);
-	return (*line || str ? 1 : 0);
+	return (*line || str[fd] ? 1 : 0);
 }
