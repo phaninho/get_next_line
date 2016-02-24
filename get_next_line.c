@@ -64,8 +64,8 @@ int			get_next_line(int const fd, char **line)
 	t_line			in;
 
 	in.chr = NULL;
-	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char) *
-	(BUFF_SIZE + 1))))
+	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char)
+	* (BUFF_SIZE + 1))))
 		return (-1);
 	*line = NULL;
 	if (str[fd])
