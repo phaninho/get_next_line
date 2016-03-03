@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/02/24 16:11:37 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/03/03 10:09:25 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ static int			read_buffer(char **line, t_line *in, char **str)
 	}
 }
 
-int			get_next_line(int const fd, char **line)
+int					get_next_line(int const fd, char **line)
 {
 	static char		*str[256] = {NULL};
 	t_line			in;
 
 	in.chr = NULL;
+	in.tmp = NULL;
 	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char) *
 	(BUFF_SIZE + 1))))
 		return (-1);
