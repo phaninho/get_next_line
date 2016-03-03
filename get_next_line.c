@@ -6,7 +6,7 @@
 /*   By: stmartin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/12 09:24:34 by stmartin          #+#    #+#             */
-/*   Updated: 2016/03/03 10:09:25 by stmartin         ###   ########.fr       */
+/*   Updated: 2016/03/03 11:29:25 by stmartin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static void			check_str(t_line *in, char **line, char **str)
 
 static int			read_buffer(char **line, t_line *in, char **str)
 {
+	char	*tmp;
+
 	if (!(in->chr = ft_strchr(in->buff, '\n')))
 	{
 		in->tmp = *line;
@@ -49,8 +51,9 @@ static int			read_buffer(char **line, t_line *in, char **str)
 	else
 	{
 		in->tmp = *line;
-		*line = ft_strjoin(*line, ft_strsub(in->buff, 0,
-					(size_t)(in->chr - in->buff)));
+		tmp = ft_strsub(in->buff, 0, (size_t)(in->chr - in->buff));
+		*line = ft_strjoin(*line, tmp);
+		free_mem(&tmp);
 		free_mem(&(in->tmp));
 		if (*(in->chr + 1))
 			*str = ft_strdup(in->chr + 1);
@@ -64,14 +67,9 @@ int					get_next_line(int const fd, char **line)
 	t_line			in;
 
 	in.chr = NULL;
-<<<<<<< HEAD
 	in.tmp = NULL;
-	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char) *
-	(BUFF_SIZE + 1))))
-=======
 	if (!line || fd < 0 || fd > 256 || !(in.buff = (char *)malloc(sizeof(char)
 	* (BUFF_SIZE + 1))))
->>>>>>> ae629bcc0225c561111b385a3ceba56844fa82cc
 		return (-1);
 	*line = NULL;
 	if (str[fd])
@@ -84,6 +82,6 @@ int					get_next_line(int const fd, char **line)
 		if (read_buffer(line, &in, &str[fd]))
 			break ;
 	}
-	free_mem(&in.buff);
+	free_mem(&(in.buff));
 	return (*line || str[fd] ? 1 : 0);
 }
